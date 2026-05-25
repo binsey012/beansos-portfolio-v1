@@ -1,0 +1,66 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  :root {
+    --beans-subtext-color: #9fb6ff;
+  }
+
+  html, body, #root {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer utilities {
+  .content-subtext-theme :is(p, li, span, a, label, small, button):not(h1):not(h2):not(h3):not(h4):not(h5):not(h6):not([class*='font-semibold']):not([class*='uppercase']) {
+    color: var(--beans-subtext-color) !important;
+  }
+
+  [data-include-header-labels='on'] .content-subtext-theme :is(p, li, span, a, label, small, button):not(h1):not(h2):not(h3):not(h4):not(h5):not(h6) {
+    color: var(--beans-subtext-color) !important;
+  }
+
+  .home-button-text {
+    color: var(--beans-subtext-color);
+  }
+
+  .glass {
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+  }
+
+  .glass-heavy {
+    background: rgba(15, 15, 25, 0.75);
+    backdrop-filter: blur(40px) saturate(200%);
+    -webkit-backdrop-filter: blur(40px) saturate(200%);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .text-shadow-sm {
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+  }
+
+  .no-select {
+    user-select: none;
+    -webkit-user-select: none;
+  }
+}
