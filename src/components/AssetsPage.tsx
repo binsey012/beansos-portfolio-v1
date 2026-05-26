@@ -1,4 +1,5 @@
 import { ArrowUpRight, BookOpen, Layers3, Sparkles } from 'lucide-react'
+import { motion } from 'framer-motion'
 import * as si from 'simple-icons'
 
 type IconData = { title: string; path: string; hex: string }
@@ -165,21 +166,25 @@ function BrandBadge({ name, logoKey }: { name: string; logoKey?: string }) {
   )
 }
 
-function LinkRow({ item }: { item: AssetLink }) {
+function LinkRow({ item, index = 0 }: { item: AssetLink; index?: number }) {
   return (
-    <a
+    <motion.a
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.04, duration: 0.3 }}
+      whileHover={{ y: -2, scale: 1.01, boxShadow: '0 6px 24px rgba(108,142,255,0.12)' }}
       href={item.url}
       target="_blank"
       rel="noreferrer"
-      className="group flex items-start gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-3 transition-colors duration-150 hover:bg-white/[0.07]"
+      className="group flex items-start gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-3 transition-colors duration-150 hover:bg-white/[0.08]"
     >
       <BrandBadge name={item.name} logoKey={item.logoKey} />
       <div className="min-w-0 flex-1">
         <p className="text-[12.5px] font-semibold text-white/88 truncate">{item.name}</p>
-        <p className="mt-0.5 text-[11.5px] leading-relaxed text-white/60">{item.note}</p>
+        <p className="mt-0.5 text-[11.5px] leading-relaxed text-white/58">{item.note}</p>
       </div>
-      <ArrowUpRight size={13} className="mt-0.5 shrink-0 text-white/35 group-hover:text-white/70" />
-    </a>
+      <ArrowUpRight size={13} className="mt-0.5 shrink-0 text-white/30 transition-colors group-hover:text-[#9fb6ff]" />
+    </motion.a>
   )
 }
 
@@ -187,13 +192,24 @@ export default function AssetsPage() {
   return (
     <div className="h-full overflow-y-auto px-5 py-6 sm:px-7 sm:py-7">
       <div className="mx-auto max-w-6xl space-y-5">
-        <section
+        {/* Hero */}
+        <motion.section
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
           className="relative overflow-hidden rounded-2xl border border-white/10 p-6 sm:p-7"
           style={{
             background:
-              'radial-gradient(ellipse 90% 120% at 0% 100%, rgba(108,142,255,0.20) 0%, transparent 62%), radial-gradient(ellipse 90% 110% at 100% 0%, rgba(34,211,238,0.14) 0%, transparent 62%), rgba(255,255,255,0.04)',
+              'radial-gradient(ellipse 90% 120% at 0% 100%, rgba(108,142,255,0.22) 0%, transparent 62%), radial-gradient(ellipse 90% 110% at 100% 0%, rgba(34,211,238,0.16) 0%, transparent 62%), rgba(255,255,255,0.04)',
           }}
         >
+          <div
+            className="pointer-events-none absolute inset-x-0 top-0 h-[2px]"
+            style={{
+              background: 'linear-gradient(90deg, transparent, #6C8EFF, #22d3ee, transparent)',
+              opacity: 0.75,
+            }}
+          />
           <div className="relative z-10 max-w-3xl">
             <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#9fb6ff]">
               <Sparkles size={12} />
@@ -204,56 +220,72 @@ export default function AssetsPage() {
             </h2>
             <p className="mt-3 text-[14px] leading-relaxed text-white/72 sm:text-[15px]">
               This library reflects the official platforms and ecosystems consistently used across
-              projects over the years, classified by operational role for clarity and credibility.
+              projects, classified by operational role for clarity and credibility.
             </p>
           </div>
-        </section>
+        </motion.section>
 
-        {STACK_GROUPS.map((group) => (
-          <section key={group.title} className="rounded-2xl border border-white/10 bg-white/[0.035] p-4 sm:p-5">
+        {STACK_GROUPS.map((group, gi) => (
+          <motion.section
+            key={group.title}
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.06 + gi * 0.06, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+            className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:p-5"
+          >
             <div className="mb-3">
               <p className="text-[13px] font-semibold text-white/88">{group.title}</p>
-              <p className="mt-0.5 text-[11.5px] text-white/52">{group.subtitle}</p>
+              <p className="mt-0.5 text-[11.5px] text-white/48">{group.subtitle}</p>
             </div>
-            <div className="grid grid-cols-1 gap-2.5 lg:grid-cols-2">
-              {group.items.map((item) => (
-                <LinkRow key={item.name} item={item} />
+            <div className="grid grid-cols-1 gap-2 lg:grid-cols-2">
+              {group.items.map((item, i) => (
+                <LinkRow key={item.name} item={item} index={i} />
               ))}
             </div>
-          </section>
+          </motion.section>
         ))}
 
-        <section className="rounded-2xl border border-white/10 bg-white/[0.035] p-4 sm:p-5">
+        <motion.section
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.38 }}
+          className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:p-5"
+        >
           <div className="mb-3 flex items-center gap-2">
             <BookOpen size={14} className="text-[#9fb6ff]" />
-            <p className="text-[12px] font-semibold uppercase tracking-[0.16em] text-white/52">
+            <p className="text-[12px] font-semibold uppercase tracking-[0.16em] text-white/48">
               Courses and Learning Tracks
             </p>
           </div>
-          <div className="grid grid-cols-1 gap-2.5 lg:grid-cols-2">
-            {COURSES.map((course) => (
-              <LinkRow key={course.name} item={course} />
+          <div className="grid grid-cols-1 gap-2 lg:grid-cols-2">
+            {COURSES.map((course, i) => (
+              <LinkRow key={course.name} item={course} index={i} />
             ))}
           </div>
-        </section>
+        </motion.section>
 
-        <section className="rounded-2xl border border-white/10 bg-white/[0.035] p-4 sm:p-5">
+        <motion.section
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.36, duration: 0.38 }}
+          className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:p-5"
+        >
           <div className="mb-3 flex items-center gap-2">
             <Layers3 size={14} className="text-[#9fb6ff]" />
-            <p className="text-[12px] font-semibold uppercase tracking-[0.16em] text-white/52">
+            <p className="text-[12px] font-semibold uppercase tracking-[0.16em] text-white/48">
               Open Source AI/LLM Learning Feed (2026-ready)
             </p>
           </div>
-          <p className="mb-3 text-[12px] text-white/58">
+          <p className="mb-3 text-[12px] text-white/55">
             Curated sources for staying current on practical LLM engineering, open-weight model
             deployment, inference optimization, and agent workflow architecture.
           </p>
-          <div className="grid grid-cols-1 gap-2.5 lg:grid-cols-2">
-            {OPEN_SOURCE_AI_FEED.map((post) => (
-              <LinkRow key={post.name} item={post} />
+          <div className="grid grid-cols-1 gap-2 lg:grid-cols-2">
+            {OPEN_SOURCE_AI_FEED.map((post, i) => (
+              <LinkRow key={post.name} item={post} index={i} />
             ))}
           </div>
-        </section>
+        </motion.section>
       </div>
     </div>
   )

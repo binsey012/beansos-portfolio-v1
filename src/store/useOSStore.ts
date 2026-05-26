@@ -236,6 +236,22 @@ const DEFAULT_WINDOWS: WindowRegistry = {
     isMaximized: false,
     zIndex: BASE_Z,
   },
+  vicecity: {
+    id: 'vicecity',
+    title: 'GTA Vice City',
+    isOpen: false,
+    isMinimized: false,
+    isMaximized: false,
+    zIndex: BASE_Z,
+  },
+  pacman: {
+    id: 'pacman',
+    title: 'PAC-MAN',
+    isOpen: false,
+    isMinimized: false,
+    isMaximized: false,
+    zIndex: BASE_Z,
+  },
 }
 
 // ─── Store ────────────────────────────────────────────────────────────────────

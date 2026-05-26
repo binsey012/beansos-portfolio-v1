@@ -6,7 +6,8 @@ import type { LucideIcon } from 'lucide-react'
 export interface IconProps {
   id: string
   label: string
-  icon: LucideIcon
+  icon?: LucideIcon
+  imageSrc?: string
   /** accent colour applied to the icon glyph */
   color?: string
   isSelected: boolean
@@ -18,6 +19,7 @@ export default function Icon({
   id,
   label,
   icon: IconGlyph,
+  imageSrc,
   color = '#a5b4fc',
   isSelected,
   onSelect,
@@ -86,12 +88,22 @@ export default function Icon({
             : 'inset 0 1px 0 rgba(255,255,255,0.10)',
         }}
       >
-        <IconGlyph
-          size={22}
-          strokeWidth={1.6}
-          style={{ color }}
-          className="drop-shadow-[0_1px_4px_rgba(0,0,0,0.6)]"
-        />
+        {imageSrc ? (
+          <img
+            src={imageSrc}
+            alt={label}
+            width={36}
+            height={36}
+            className="w-9 h-9 rounded-lg object-cover drop-shadow-[0_1px_4px_rgba(0,0,0,0.6)]"
+          />
+        ) : IconGlyph ? (
+          <IconGlyph
+            size={22}
+            strokeWidth={1.6}
+            style={{ color }}
+            className="drop-shadow-[0_1px_4px_rgba(0,0,0,0.6)]"
+          />
+        ) : null}
       </span>
 
       {/* label */}

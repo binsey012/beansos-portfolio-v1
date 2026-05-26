@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import {
   motion,
   useDragControls,
@@ -16,6 +16,8 @@ import AssetsPage from './AssetsPage'
 import SkillsPage from './SkillsPage'
 import ResumePage from './ResumePage'
 import ShowcasePage from './ShowcasePage'
+import ViceCityPage from './ViceCityPage'
+import PacManPage from './PacManPage'
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -27,19 +29,6 @@ const DEFAULT_W = 680
 const DEFAULT_H = 440
 const MIN_W = 520
 const MIN_H = 320
-
-/**
- * Compute a staggered initial position so stacked windows don't
- * perfectly overlap. We use the window's BASE_Z (100) offset relative to
- * the actual zIndex to cascade diagonally.
- */
-function initialPosition(zIndex: number) {
-  const cascade = ((zIndex - 100) % 8) * 28
-  return {
-    x: Math.round((window.innerWidth  - DEFAULT_W) / 2) + cascade,
-    y: Math.round((window.innerHeight - DEFAULT_H - TASKBAR_H) / 2) + cascade,
-  }
-}
 
 // ─── Control Button ───────────────────────────────────────────────────────────
 
@@ -88,11 +77,7 @@ export default function WindowFrame({ win, children }: WindowFrameProps) {
   const toggleMaximize = useOSStore((s) => s.toggleMaximize)
 
   const dragControls = useDragControls()
-  const constraintRef = useRef<HTMLDivElement>(null)
   const [windowSize, setWindowSize] = useState({ width: DEFAULT_W, height: DEFAULT_H })
-
-  // Memoised start position so it doesn't recalculate on every re-render
-  const startPos = useRef(initialPosition(win.zIndex))
 
   const startResize = (e: React.PointerEvent<HTMLButtonElement>) => {
     if (win.isMaximized) return
@@ -176,9 +161,9 @@ export default function WindowFrame({ win, children }: WindowFrameProps) {
     window.addEventListener('pointerup', onUp)
   }
 
-  // ── Drag boundary ──────────────────────────────────────────────────────────
-  // We constrain to the viewport minus the taskbar by attaching a full-screen
-  // invisible ref div as the dragConstraints parent.
+      // ── Drag boundary ──────────────────────────────────────────────────────────
+  // Windows can be freely dragged anywhere on the screen; only the top edge
+  // is clamped to keep the title bar reachable (y >= 0).
 
   // ── Animation variants ─────────────────────────────────────────────────────
   const variants = {
@@ -208,61 +193,40 @@ export default function WindowFrame({ win, children }: WindowFrameProps) {
 
   // ── Maximized layout ───────────────────────────────────────────────────────
   // When maximized, override position/size to fill the workspace above the taskbar.
-  const maxStyle: React.CSSProperties = win.isMaximized
-    ? { top: 0, left: 0, width: '100vw', height: `calc(100vh - ${TASKBAR_H}px)`, x: 0, y: 0 }
-    : {}
-
   return (
     <motion.div
       key={win.id}
       // ── Presence animation
       variants={variants}
       initial="hidden"
-      animate="visible"
+      // When maximized, also force x/y back to 0 to clear any drag offset
+      animate={
+        win.isMaximized
+          ? { opacity: 1, scale: 1, x: 0, y: 0, transition: { duration: 0.18, ease: [0.22, 1, 0.36, 1] } }
+          : 'visible'
+      }
       exit="exit"
 
-      // ── Drag
+      // ── Drag — freely across the entire screen (only title bar initiates)
       drag={!win.isMaximized}
       dragControls={dragControls}
-      dragListener={false}          // only header initiates drag
+      dragListener={false}
       dragMomentum={false}
       dragElastic={0}
-      dragConstraints={constraintRef}
-      onDragEnd={(_e: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
-        // keep the drag offset baked into the motion value
-        void info
-      }}
-
-      // pointer-events-auto re-enables interaction on this window only;
-      // the WindowManager container is pointer-events-none so desktop
-      // and taskbar remain clickable through the gaps between windows.
-      style={{
-        position: 'fixed',
-        width: win.isMaximized ? '100vw' : windowSize.width,
-        height: win.isMaximized ? `calc(100vh - ${TASKBAR_H}px)` : windowSize.height,
-        top: win.isMaximized ? 0 : startPos.current.y,
-        left: win.isMaximized ? 0 : startPos.current.x,
-        zIndex: win.zIndex,
-        ...maxStyle,
-      }}
+      onDragEnd={(_e: MouseEvent | TouchEvent | PointerEvent, _info: PanInfo) => {}}
 
       // ── Focus on any pointer interaction
       onPointerDown={() => focusWindow(win.id)}
 
       className="flex flex-col will-change-transform pointer-events-auto"
+      style={{
+        position: 'absolute',
+        zIndex: win.zIndex,
+        ...(win.isMaximized
+          ? { top: 0, left: 0, right: 0, bottom: 0 }
+          : { top: 0, left: 0, width: windowSize.width, height: windowSize.height }),
+      }}
     >
-      {/* invisible full-viewport constraint sentinel */}
-      <div
-        ref={constraintRef}
-        className="pointer-events-none fixed"
-        style={{
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: TASKBAR_H,
-        }}
-      />
-
       {/* ── Window shell */}
       <div
         className={[
@@ -398,6 +362,8 @@ function AppContent({ win }: { win: WindowState }) {
   if (win.id === 'stack') return <TechStackPage />
   if (win.id === 'github') return <GithubPage />
   if (win.id === 'assets') return <AssetsPage />
+  if (win.id === 'vicecity') return <ViceCityPage />
+  if (win.id === 'pacman') return <PacManPage />
   return (
     <div className="flex flex-col items-center justify-center h-full gap-3 p-8 text-center">
       <span className="text-4xl select-none">🪟</span>

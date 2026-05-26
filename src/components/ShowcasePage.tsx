@@ -85,13 +85,23 @@ export default function ShowcasePage() {
   return (
     <div className="h-full overflow-y-auto px-5 py-6 sm:px-7 sm:py-7">
       <div className="mx-auto max-w-6xl space-y-5">
-        <section
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
           className="relative overflow-hidden rounded-2xl border border-white/10 p-6 sm:p-7"
           style={{
             background:
               'radial-gradient(ellipse 95% 115% at 0% 100%, rgba(14,165,233,0.20) 0%, transparent 64%), radial-gradient(ellipse 90% 100% at 100% 0%, rgba(34,197,94,0.18) 0%, transparent 60%), rgba(255,255,255,0.04)',
           }}
         >
+          <div
+            className="pointer-events-none absolute inset-x-0 top-0 h-[2px]"
+            style={{
+              background: 'linear-gradient(90deg, transparent, #0ea5e9, #22c55e, transparent)',
+              opacity: 0.75,
+            }}
+          />
           <div className="relative z-10 max-w-3xl">
             <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#9fe4ff]">
               <Sparkles size={12} />
@@ -107,9 +117,14 @@ export default function ShowcasePage() {
               operations, and product-facing workflows using a practical AIDLC approach.
             </p>
           </div>
-        </section>
+        </motion.section>
 
-        <section className="rounded-2xl border border-white/10 bg-white/[0.035] p-4 sm:p-5">
+        <motion.section
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1, duration: 0.4 }}
+          className="rounded-2xl border border-white/10 bg-white/[0.035] p-4 sm:p-5"
+        >
           <div className="mb-3 flex items-center justify-between gap-3">
             <h3 className="text-[13px] font-semibold uppercase tracking-[0.12em] text-white/85">
               Recruiter View
@@ -158,21 +173,35 @@ export default function ShowcasePage() {
               </ul>
             </motion.article>
           </AnimatePresence>
-        </section>
+        </motion.section>
 
-        <section className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          {METRICS.map((item) => (
-            <article
+        <motion.section
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.18, duration: 0.38 }}
+          className="grid grid-cols-2 gap-3 sm:grid-cols-4"
+        >
+          {METRICS.map((item, i) => (
+            <motion.article
               key={item.label}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.2 + i * 0.06 }}
+              whileHover={{ y: -2, boxShadow: '0 8px 24px rgba(159,228,255,0.18)' }}
               className="rounded-xl border border-white/10 bg-white/[0.035] p-3.5"
             >
               <p className="text-[18px] font-bold text-[#9fe4ff]">{item.value}</p>
               <p className="mt-1 text-[11.5px] text-white/70">{item.label}</p>
-            </article>
+            </motion.article>
           ))}
-        </section>
+        </motion.section>
 
-        <section className="rounded-2xl border border-white/10 bg-white/[0.035] p-4 sm:p-5">
+        <motion.section
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.24, duration: 0.38 }}
+          className="rounded-2xl border border-white/10 bg-white/[0.035] p-4 sm:p-5"
+        >
           <div className="mb-4 flex items-center gap-2.5">
             <Workflow size={15} className="text-[#a7f3d0]" />
             <h3 className="text-[13px] font-semibold uppercase tracking-[0.12em] text-white/85">
@@ -181,9 +210,12 @@ export default function ShowcasePage() {
           </div>
 
           <div className="space-y-2.5">
-            {CASE_PHASES.map((row) => (
-              <article
+            {CASE_PHASES.map((row, i) => (
+              <motion.article
                 key={row.phase}
+                initial={{ opacity: 0, x: -8 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.26 + i * 0.05 }}
                 className="rounded-xl border border-white/10 bg-white/[0.03] p-3.5"
               >
                 <p className="text-[12px] font-semibold text-[#a7f3d0]">{row.phase}</p>
@@ -193,13 +225,18 @@ export default function ShowcasePage() {
                 <p className="mt-1 text-[12px] text-white/75">
                   <span className="font-semibold text-white/82">Outcome:</span> {row.impact}
                 </p>
-              </article>
+              </motion.article>
             ))}
           </div>
-        </section>
+        </motion.section>
 
-        <section className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-          <article className="rounded-2xl border border-white/10 bg-white/[0.035] p-4">
+        <motion.section
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.38 }}
+          className="grid grid-cols-1 gap-4 lg:grid-cols-3"
+        >
+          <motion.article whileHover={{ y: -2, boxShadow: '0 8px 28px rgba(250,204,21,0.1)' }} className="rounded-2xl border border-white/10 bg-white/[0.035] p-4">
             <div className="mb-2 flex items-center gap-2 text-[#facc15]">
               <Briefcase size={14} />
               <p className="text-[12px] font-semibold uppercase tracking-[0.1em]">Client Lifecycle</p>
@@ -207,9 +244,9 @@ export default function ShowcasePage() {
             <p className="text-[12.5px] text-white/70">
               Discovery to handover model for stakeholder alignment, delivery cadence, and post-launch optimization.
             </p>
-          </article>
+          </motion.article>
 
-          <article className="rounded-2xl border border-white/10 bg-white/[0.035] p-4">
+          <motion.article whileHover={{ y: -2, boxShadow: '0 8px 28px rgba(196,181,253,0.1)' }} className="rounded-2xl border border-white/10 bg-white/[0.035] p-4">
             <div className="mb-2 flex items-center gap-2 text-[#c4b5fd]">
               <Brain size={14} />
               <p className="text-[12px] font-semibold uppercase tracking-[0.1em]">AI + Automation Lab</p>
@@ -217,9 +254,9 @@ export default function ShowcasePage() {
             <p className="text-[12.5px] text-white/70">
               Prompt systems, guardrails, and orchestration patterns designed for operational reliability, not hype.
             </p>
-          </article>
+          </motion.article>
 
-          <article className="rounded-2xl border border-white/10 bg-white/[0.035] p-4">
+          <motion.article whileHover={{ y: -2, boxShadow: '0 8px 28px rgba(134,239,172,0.1)' }} className="rounded-2xl border border-white/10 bg-white/[0.035] p-4">
             <div className="mb-2 flex items-center gap-2 text-[#86efac]">
               <Gauge size={14} />
               <p className="text-[12px] font-semibold uppercase tracking-[0.1em]">Proof of Impact</p>
@@ -227,10 +264,15 @@ export default function ShowcasePage() {
             <p className="text-[12.5px] text-white/70">
               Performance narratives anchored in throughput, quality, and customer experience indicators.
             </p>
-          </article>
-        </section>
+          </motion.article>
+        </motion.section>
 
-        <section className="rounded-2xl border border-white/10 bg-white/[0.035] p-4 sm:p-5">
+        <motion.section
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.44 }}
+          className="rounded-2xl border border-white/10 bg-white/[0.035] p-4 sm:p-5"
+        >
           <div className="mb-2 flex items-center gap-2 text-[#9fb6ff]">
             <BadgeCheck size={14} />
             <p className="text-[12px] font-semibold uppercase tracking-[0.1em]">NDA-safe Portfolio Note</p>
@@ -239,7 +281,7 @@ export default function ShowcasePage() {
             Specific client names and sensitive implementation details are omitted. Shared examples represent
             real delivery patterns and outcomes framed for confidentiality-safe review.
           </p>
-        </section>
+        </motion.section>
       </div>
     </div>
   )

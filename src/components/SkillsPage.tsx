@@ -1,4 +1,5 @@
 import { ArrowUpRight, Award, Briefcase, Cog, Cpu, ShieldCheck, Users } from 'lucide-react'
+import { motion } from 'framer-motion'
 import type { LucideIcon } from 'lucide-react'
 
 interface SkillCategory {
@@ -174,13 +175,24 @@ export default function SkillsPage() {
   return (
     <div className="h-full overflow-y-auto px-5 py-6 sm:px-7 sm:py-7">
       <div className="mx-auto max-w-6xl space-y-5">
-        <section
+        {/* Hero */}
+        <motion.section
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
           className="relative overflow-hidden rounded-2xl border border-white/10 p-6 sm:p-7"
           style={{
             background:
-              'radial-gradient(ellipse 95% 115% at 0% 100%, rgba(108,142,255,0.20) 0%, transparent 64%), radial-gradient(ellipse 90% 100% at 100% 0%, rgba(168,85,247,0.16) 0%, transparent 60%), rgba(255,255,255,0.04)',
+              'radial-gradient(ellipse 95% 115% at 0% 100%, rgba(108,142,255,0.22) 0%, transparent 64%), radial-gradient(ellipse 90% 100% at 100% 0%, rgba(168,85,247,0.18) 0%, transparent 60%), rgba(255,255,255,0.04)',
           }}
         >
+          <div
+            className="pointer-events-none absolute inset-x-0 top-0 h-[2px]"
+            style={{
+              background: 'linear-gradient(90deg, transparent, #6C8EFF, #a78bfa, transparent)',
+              opacity: 0.75,
+            }}
+          />
           <div className="relative z-10 max-w-3xl">
             <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#9fb6ff]">
               <Briefcase size={12} />
@@ -192,9 +204,9 @@ export default function SkillsPage() {
             </h2>
 
             <p className="mt-3 text-[14px] leading-relaxed text-white/72 sm:text-[15px]">
-              This skills architecture is structured for Team Lead, Solutions, and modern
-              cross-functional technical roles. It highlights operational leadership, infrastructure
-              depth, and AI-enabled delivery capabilities.
+              This skills architecture targets Team Lead, Solutions, and modern cross-functional
+              technical roles — combining operational leadership, infrastructure depth, and
+              AI-enabled delivery capabilities.
             </p>
 
             <a
@@ -203,19 +215,29 @@ export default function SkillsPage() {
               rel="noreferrer"
               className="mt-4 inline-flex items-center gap-1.5 text-[12.5px] font-semibold text-[#9fb6ff] hover:text-[#bfd0ff]"
             >
-              For additional skills, view LinkedIn profile
+              View LinkedIn profile for additional skills
               <ArrowUpRight size={13} />
             </a>
           </div>
-        </section>
+        </motion.section>
 
-        <section className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-          {SKILL_CATEGORIES.map((group) => {
+        {/* Skill categories */}
+        <motion.section
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1, duration: 0.4 }}
+          className="grid grid-cols-1 gap-4 xl:grid-cols-2"
+        >
+          {SKILL_CATEGORIES.map((group, gi) => {
             const Icon = group.icon
             return (
-              <article
+              <motion.article
                 key={group.title}
-                className="rounded-2xl border border-white/10 bg-white/[0.035] p-4 sm:p-5"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.12 + gi * 0.07, duration: 0.35 }}
+                whileHover={{ y: -2, boxShadow: `0 10px 36px ${group.accent}18` }}
+                className="rounded-2xl border border-white/10 bg-white/[0.035] p-4 sm:p-5 transition-shadow duration-200"
               >
                 <div className="mb-3 flex items-center gap-2.5">
                   <span
@@ -224,27 +246,41 @@ export default function SkillsPage() {
                   >
                     <Icon size={15} />
                   </span>
-                  <h3 className="text-[13px] font-semibold uppercase tracking-[0.12em] text-white/85">
+                  <h3 className="text-[12.5px] font-semibold uppercase tracking-[0.12em] text-white/82">
                     {group.title}
                   </h3>
                 </div>
 
                 <div className="flex flex-wrap gap-1.5">
-                  {group.items.map((skill) => (
-                    <span
+                  {group.items.map((skill, si) => (
+                    <motion.span
                       key={skill}
-                      className="rounded-lg border border-white/12 bg-white/[0.045] px-2.5 py-1 text-[11.5px] font-medium text-white/75"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.14 + gi * 0.07 + si * 0.02 }}
+                      whileHover={{
+                        scale: 1.06,
+                        boxShadow: `0 0 10px ${group.accent}44`,
+                        borderColor: `${group.accent}66`,
+                      }}
+                      className="cursor-default rounded-lg border border-white/12 bg-white/[0.045] px-2.5 py-1 text-[11.5px] font-medium text-white/74 transition-colors duration-100"
                     >
                       {skill}
-                    </span>
+                    </motion.span>
                   ))}
                 </div>
-              </article>
+              </motion.article>
             )
           })}
-        </section>
+        </motion.section>
 
-        <section className="rounded-2xl border border-white/10 bg-white/[0.035] p-4 sm:p-5">
+        {/* AIDLC */}
+        <motion.section
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.22, duration: 0.38 }}
+          className="rounded-2xl border border-white/10 bg-white/[0.035] p-4 sm:p-5"
+        >
           <div className="mb-4 flex items-center gap-2.5">
             <Cpu size={15} className="text-[#c7a6ff]" />
             <h3 className="text-[13px] font-semibold uppercase tracking-[0.12em] text-white/85">
@@ -252,20 +288,22 @@ export default function SkillsPage() {
             </h3>
           </div>
 
-          <p className="mb-3 text-[12.5px] leading-relaxed text-white/62">
+          <p className="mb-3 text-[12.5px] leading-relaxed text-white/60">
             Delivery framework used to move AI initiatives from concept to measurable production outcomes.
-            This lifecycle keeps AI adoption practical, governed, and aligned with business KPIs.
           </p>
 
           <div className="grid grid-cols-1 gap-2.5 lg:grid-cols-2">
-            {AIDLC_PHASES.map((step) => (
-              <article
+            {AIDLC_PHASES.map((step, i) => (
+              <motion.article
                 key={step.phase}
+                initial={{ opacity: 0, x: -8 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.24 + i * 0.05 }}
                 className="rounded-xl border border-white/10 bg-white/[0.03] p-3.5"
               >
                 <p className="text-[12px] font-semibold text-[#c7a6ff]">{step.phase}</p>
-                <p className="mt-1.5 text-[12px] leading-relaxed text-white/68">{step.focus}</p>
-              </article>
+                <p className="mt-1.5 text-[12px] leading-relaxed text-white/65">{step.focus}</p>
+              </motion.article>
             ))}
           </div>
 
@@ -276,15 +314,21 @@ export default function SkillsPage() {
             <p className="mt-1 text-[12px] font-semibold text-white/88">
               Mini Case: Support Automation Rollout (Phase 1 to 6)
             </p>
-            <p className="mt-1.5 text-[12px] leading-relaxed text-white/72">
+            <p className="mt-1.5 text-[12px] leading-relaxed text-white/70">
               Framed the support bottlenecks, designed prompt and workflow pathways, deployed staged
               AI-assisted triage, and continuously optimized through QA and KPI monitoring. Result:
               faster response cycles, more consistent outputs, and stronger SLA performance.
             </p>
           </article>
-        </section>
+        </motion.section>
 
-        <section className="rounded-2xl border border-white/10 bg-white/[0.035] p-4 sm:p-5">
+        {/* Certifications */}
+        <motion.section
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.38 }}
+          className="rounded-2xl border border-white/10 bg-white/[0.035] p-4 sm:p-5"
+        >
           <div className="mb-4 flex items-center gap-2.5">
             <Award size={15} className="text-[#9fb6ff]" />
             <h3 className="text-[13px] font-semibold uppercase tracking-[0.12em] text-white/85">
@@ -292,10 +336,13 @@ export default function SkillsPage() {
             </h3>
           </div>
 
-          <div className="space-y-3.5">
-            {CERTIFICATIONS.map((group) => (
-              <article
+          <div className="space-y-3">
+            {CERTIFICATIONS.map((group, gi) => (
+              <motion.article
                 key={group.title}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.32 + gi * 0.05 }}
                 className="rounded-xl border border-white/10 bg-white/[0.03] p-3.5"
               >
                 <div className="mb-2 flex items-center justify-between gap-3">
@@ -304,17 +351,17 @@ export default function SkillsPage() {
                     {group.priority}
                   </span>
                 </div>
-                <p className="mb-2 text-[11.5px] text-white/55">{group.subtitle}</p>
+                <p className="mb-2 text-[11.5px] text-white/52">{group.subtitle}</p>
 
-                <ul className="list-disc space-y-1.5 pl-5 text-[12.5px] text-white/72 marker:text-[#9fb6ff]">
+                <ul className="list-disc space-y-1.5 pl-5 text-[12.5px] text-white/70 marker:text-[#9fb6ff]">
                   {group.items.map((item) => (
                     <li key={item}>{item}</li>
                   ))}
                 </ul>
-              </article>
+              </motion.article>
             ))}
           </div>
-        </section>
+        </motion.section>
       </div>
     </div>
   )

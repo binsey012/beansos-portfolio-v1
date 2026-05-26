@@ -9,6 +9,7 @@ import {
   Sparkles,
   Layers,
   Terminal,
+  Ghost,
 } from 'lucide-react'
 import Icon from './Icon'
 import type { LucideIcon } from 'lucide-react'
@@ -16,7 +17,8 @@ import type { LucideIcon } from 'lucide-react'
 export interface DesktopIconDef {
   id: string
   label: string
-  icon: LucideIcon
+  icon?: LucideIcon
+  imageSrc?: string
   color: string
 }
 
@@ -31,6 +33,8 @@ export const DESKTOP_ICONS: DesktopIconDef[] = [
   { id: 'showcase',  label: 'Showcase',    icon: Sparkles,  color: '#a5f3fc' },
   { id: 'stack',     label: 'Tech Stack',  icon: Layers,    color: '#ddd6fe' },
   { id: 'assets',    label: 'Assets',      icon: Folder,    color: '#fde68a' },
+  { id: 'vicecity',  label: 'Vice City',   imageSrc: '/gta-vice-city.webp', color: '#ff60d4' },
+  { id: 'pacman',    label: 'PAC-MAN',     icon: Ghost, color: '#ffd700' },
 ]
 
 interface DesktopGridProps {
@@ -69,6 +73,7 @@ export default function DesktopGrid({ selectedId, onSelect, onOpen }: DesktopGri
           id={def.id}
           label={def.label}
           icon={def.icon}
+          imageSrc={def.imageSrc}
           color={def.color}
           isSelected={selectedId === def.id}
           onSelect={onSelect}

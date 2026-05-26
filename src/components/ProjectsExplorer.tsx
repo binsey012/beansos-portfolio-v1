@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowLeft, ExternalLink, Folder, FolderOpen, ShieldCheck, Sparkles } from 'lucide-react'
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
@@ -207,21 +208,28 @@ function FolderItem({
   project,
   isSelected,
   onClick,
+  index,
 }: {
   project: Project
   isSelected: boolean
   onClick: () => void
+  index: number
 }) {
   return (
-    <button
+    <motion.button
+      initial={{ opacity: 0, scale: 0.92, y: 10 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      transition={{ delay: index * 0.04, duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+      whileHover={{ y: -2, scale: 1.02, boxShadow: `0 8px 28px ${project.color}25` }}
+      whileTap={{ scale: 0.97 }}
       onClick={onClick}
       className={[
         'group flex flex-col items-start gap-2 p-3 rounded-xl text-left',
-        'transition-all duration-150 outline-none',
+        'transition-colors duration-150 outline-none',
         'focus-visible:ring-2 focus-visible:ring-[#6C8EFF]/60',
         isSelected
           ? 'bg-white/[0.12] border border-white/[0.18] shadow-[0_0_0_1.5px_rgba(108,142,255,0.5)]'
-          : 'bg-white/[0.04] border border-white/[0.07] hover:bg-white/[0.08] hover:border-white/[0.13]',
+          : 'bg-white/[0.04] border border-white/[0.07] hover:bg-white/[0.09] hover:border-white/[0.15]',
       ].join(' ')}
     >
       {/* Icon */}
@@ -247,7 +255,7 @@ function FolderItem({
         </div>
         <p className="text-[10px] text-white/40 mt-0.5 truncate">{project.type}</p>
       </div>
-    </button>
+    </motion.button>
   )
 }
 
@@ -255,7 +263,13 @@ function FolderItem({
 
 function DetailPanel({ project, onBack }: { project: Project; onBack: () => void }) {
   return (
-    <div className="flex flex-col h-full">
+    <motion.div
+      initial={{ opacity: 0, x: 24 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: 24 }}
+      transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+      className="flex flex-col h-full"
+    >
       {/* Back bar */}
       <div className="flex items-center gap-2 px-5 py-3 border-b border-white/[0.07] shrink-0">
         <button
@@ -362,7 +376,7 @@ function DetailPanel({ project, onBack }: { project: Project; onBack: () => void
           )}
         </div>
       </div>
-    </div>
+    </motion.div>
   )
 }
 
@@ -373,12 +387,20 @@ export default function ProjectsExplorer() {
   const featured = PROJECTS.filter((p) => p.featured)
   const standard = PROJECTS.filter((p) => !p.featured)
 
-  if (selected) {
-    return <DetailPanel project={selected} onBack={() => setSelected(null)} />
-  }
-
   return (
     <div className="flex flex-col h-full">
+      <AnimatePresence mode="wait">
+        {selected ? (
+          <DetailPanel key="detail" project={selected} onBack={() => setSelected(null)} />
+        ) : (
+          <motion.div
+            key="grid"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, x: -16 }}
+            transition={{ duration: 0.25 }}
+            className="flex flex-col h-full"
+          >
       {/* Toolbar */}
       <div className="flex items-center justify-between px-5 py-3 border-b border-white/[0.07] shrink-0">
         <div className="flex items-center gap-2">
@@ -416,12 +438,13 @@ export default function ProjectsExplorer() {
               </span>
             </div>
             <div className="grid grid-cols-3 gap-2.5">
-              {featured.map((p) => (
+              {featured.map((p, i) => (
                 <FolderItem
                   key={p.id}
                   project={p}
                   isSelected={false}
                   onClick={() => setSelected(p)}
+                  index={i}
                 />
               ))}
             </div>
@@ -435,12 +458,13 @@ export default function ProjectsExplorer() {
               </span>
             </div>
             <div className="grid grid-cols-3 gap-2.5">
-              {standard.map((p) => (
+              {standard.map((p, i) => (
                 <FolderItem
                   key={p.id}
                   project={p}
                   isSelected={false}
                   onClick={() => setSelected(p)}
+                  index={featured.length + i}
                 />
               ))}
             </div>
@@ -456,6 +480,9 @@ export default function ProjectsExplorer() {
           {PROJECTS.filter(p => p.status === 'Archived').length} archived
         </span>
       </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

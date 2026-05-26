@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 import type { LucideIcon } from 'lucide-react'
 import {
   Bot,
@@ -174,24 +175,36 @@ function StackPanel({
   title,
   subtitle,
   stacks,
+  animKey,
 }: {
   title: string
   subtitle: string
   stacks: StackCategory[]
+  animKey: string
 }) {
   return (
-    <section className="rounded-2xl border border-white/10 bg-white/[0.035] p-4 sm:p-5">
+    <motion.section
+      key={animKey}
+      initial={{ opacity: 0, y: 14 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+      className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:p-5"
+    >
       <div className="mb-4">
-        <h3 className="text-[15px] font-semibold text-white/90">{title}</h3>
-        <p className="mt-1 text-[12px] text-white/50">{subtitle}</p>
+        <h3 className="text-[14.5px] font-semibold text-white/90">{title}</h3>
+        <p className="mt-1 text-[12px] text-white/48">{subtitle}</p>
       </div>
 
-      <div className="space-y-3.5">
-        {stacks.map((group) => {
+      <div className="space-y-3">
+        {stacks.map((group, gi) => {
           const Icon = group.icon
           return (
-            <article
+            <motion.article
               key={group.title}
+              initial={{ opacity: 0, x: -12 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: gi * 0.05, duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
               className="rounded-xl border border-white/10 bg-white/[0.03] p-3.5"
             >
               <div className="mb-2.5 flex items-center gap-2.5">
@@ -201,26 +214,32 @@ function StackPanel({
                 >
                   <Icon size={14} />
                 </span>
-                <p className="text-[12px] font-semibold uppercase tracking-[0.12em] text-white/68">
+                <p className="text-[11.5px] font-semibold uppercase tracking-[0.12em] text-white/65">
                   {group.title}
                 </p>
               </div>
 
               <div className="flex flex-wrap gap-1.5">
                 {group.items.map((item) => (
-                  <span
+                  <motion.span
                     key={item}
-                    className="rounded-lg border border-white/12 bg-white/[0.045] px-2 py-1 text-[11.5px] font-medium text-white/75"
+                    whileHover={{
+                      scale: 1.06,
+                      boxShadow: `0 0 10px ${group.accent}44`,
+                      borderColor: `${group.accent}66`,
+                      color: '#fff',
+                    }}
+                    className="cursor-default rounded-lg border border-white/12 bg-white/[0.045] px-2 py-1 text-[11.5px] font-medium text-white/72 transition-colors duration-100"
                   >
                     {item}
-                  </span>
+                  </motion.span>
                 ))}
               </div>
-            </article>
+            </motion.article>
           )
         })}
       </div>
-    </section>
+    </motion.section>
   )
 }
 
@@ -236,16 +255,33 @@ export default function TechStackPage() {
     [],
   )
 
+  const TABS: { id: TrackMode; label: string; color: string }[] = [
+    { id: 'support', label: 'AI Ops + Support Lead', color: '#6C8EFF' },
+    { id: 'developer', label: 'Full Stack Developer', color: '#22d3ee' },
+    { id: 'both', label: 'Compare Both', color: '#ffffff' },
+  ]
+
   return (
     <div className="h-full overflow-y-auto px-5 py-6 sm:px-7 sm:py-7">
       <div className="mx-auto max-w-6xl space-y-5">
-        <section
+        {/* Hero */}
+        <motion.section
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
           className="relative overflow-hidden rounded-2xl border border-white/10 p-6"
           style={{
             background:
               'radial-gradient(ellipse 95% 110% at 0% 100%, rgba(108,142,255,0.18) 0%, transparent 62%), radial-gradient(ellipse 90% 100% at 100% 0%, rgba(34,211,238,0.15) 0%, transparent 60%), rgba(255,255,255,0.04)',
           }}
         >
+          <div
+            className="pointer-events-none absolute inset-x-0 top-0 h-[2px]"
+            style={{
+              background: 'linear-gradient(90deg, transparent, #6C8EFF, #22d3ee, transparent)',
+              opacity: 0.75,
+            }}
+          />
           <div className="relative z-10">
             <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#9fb6ff]">
               <Sparkles size={12} />
@@ -257,88 +293,90 @@ export default function TechStackPage() {
             </h2>
 
             <p className="mt-3 max-w-3xl text-[14px] leading-relaxed text-white/72 sm:text-[15px]">
-              This is a split-stack profile designed for hybrid roles: technical support leadership,
-              AI operations, and full-stack development. Switch views or compare both tracks side by
-              side.
+              A split-stack profile designed for hybrid roles: technical support leadership,
+              AI operations, and full-stack development. Switch views or compare both side by side.
             </p>
 
-            <div className="mt-5 grid grid-cols-2 gap-2.5 sm:inline-flex sm:w-auto">
-              <button
-                onClick={() => setMode('support')}
-                className={[
-                  'rounded-xl px-3 py-2 text-[12px] font-semibold transition-colors',
-                  mode === 'support'
-                    ? 'bg-[#6C8EFF] text-white'
-                    : 'bg-white/[0.07] text-white/75 hover:bg-white/[0.11]',
-                ].join(' ')}
-              >
-                AI Ops + Support Lead
-              </button>
-              <button
-                onClick={() => setMode('developer')}
-                className={[
-                  'rounded-xl px-3 py-2 text-[12px] font-semibold transition-colors',
-                  mode === 'developer'
-                    ? 'bg-[#22d3ee] text-[#07131f]'
-                    : 'bg-white/[0.07] text-white/75 hover:bg-white/[0.11]',
-                ].join(' ')}
-              >
-                Full Stack Developer
-              </button>
-              <button
-                onClick={() => setMode('both')}
-                className={[
-                  'col-span-2 rounded-xl px-3 py-2 text-[12px] font-semibold transition-colors sm:col-auto',
-                  mode === 'both'
-                    ? 'bg-white text-[#0d1530]'
-                    : 'bg-white/[0.07] text-white/75 hover:bg-white/[0.11]',
-                ].join(' ')}
-              >
-                Compare Both
-              </button>
+            {/* Animated tab buttons */}
+            <div className="mt-5 flex flex-wrap gap-2">
+              {TABS.map((tab) => (
+                <motion.button
+                  key={tab.id}
+                  onClick={() => setMode(tab.id)}
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.96 }}
+                  className="relative rounded-xl px-3.5 py-2 text-[12px] font-semibold transition-colors duration-150"
+                  style={
+                    mode === tab.id
+                      ? { background: `${tab.color}22`, color: tab.color, borderColor: `${tab.color}55`, border: '1px solid' }
+                      : { background: 'rgba(255,255,255,0.07)', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.12)' }
+                  }
+                >
+                  {mode === tab.id && (
+                    <motion.span
+                      layoutId="tab-indicator"
+                      className="absolute inset-0 rounded-xl"
+                      style={{ background: `${tab.color}18`, boxShadow: `0 0 16px ${tab.color}30` }}
+                    />
+                  )}
+                  <span className="relative z-10">{tab.label}</span>
+                </motion.button>
+              ))}
             </div>
 
             <div className="mt-4 flex flex-wrap gap-2">
-              <span className="rounded-full border border-white/15 bg-white/[0.05] px-3 py-1 text-[11px] text-white/70">
+              <span className="rounded-full border border-white/12 bg-white/[0.04] px-3 py-1 text-[11px] text-white/60">
                 AI Ops Stack: {supportTotal} capabilities
               </span>
-              <span className="rounded-full border border-white/15 bg-white/[0.05] px-3 py-1 text-[11px] text-white/70">
+              <span className="rounded-full border border-white/12 bg-white/[0.04] px-3 py-1 text-[11px] text-white/60">
                 Dev Stack: {devTotal} capabilities
               </span>
             </div>
           </div>
-        </section>
+        </motion.section>
 
-        {mode === 'both' && (
-          <section className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+        {/* Panels with AnimatePresence */}
+        <AnimatePresence mode="wait">
+          {mode === 'both' ? (
+            <motion.div
+              key="both"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              className="grid grid-cols-1 gap-4 xl:grid-cols-2"
+            >
+              <StackPanel
+                animKey="support-panel"
+                title="Tech Stack — AI Ops + Support Lead"
+                subtitle="Optimized for Team Lead, Support Manager, Solutions Engineer roles"
+                stacks={SUPPORT_STACK}
+              />
+              <StackPanel
+                animKey="dev-panel"
+                title="Tech Stack — Full Stack Web Developer"
+                subtitle="Optimized for Web Dev, Solutions, and Freelance roles"
+                stacks={DEV_STACK}
+              />
+            </motion.div>
+          ) : mode === 'support' ? (
             <StackPanel
+              key="support-only"
+              animKey="support-only"
               title="Tech Stack — Technical Support Team Lead / AI Operations"
               subtitle="Optimized for Team Lead, Support Manager, Solutions Engineer roles"
               stacks={SUPPORT_STACK}
             />
+          ) : (
             <StackPanel
+              key="dev-only"
+              animKey="dev-only"
               title="Tech Stack — Full Stack Web Developer"
               subtitle="Optimized for Web Dev, Solutions, and Freelance roles"
               stacks={DEV_STACK}
             />
-          </section>
-        )}
-
-        {mode === 'support' && (
-          <StackPanel
-            title="Tech Stack — Technical Support Team Lead / AI Operations"
-            subtitle="Optimized for Team Lead, Support Manager, Solutions Engineer roles"
-            stacks={SUPPORT_STACK}
-          />
-        )}
-
-        {mode === 'developer' && (
-          <StackPanel
-            title="Tech Stack — Full Stack Web Developer"
-            subtitle="Optimized for Web Dev, Solutions, and Freelance roles"
-            stacks={DEV_STACK}
-          />
-        )}
+          )}
+        </AnimatePresence>
       </div>
     </div>
   )
